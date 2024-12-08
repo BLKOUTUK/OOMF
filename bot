@@ -1,0 +1,153 @@
+<div id="chat-container" class="chat-container"></div>
+<form id="question-form">
+  <input type="text" id="question-input" placeholder="Ask a question..." required>
+  <button type="submit" id="submit-btn">Send</button>
+</form>
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+}
+
+.message {
+  display: flex;
+  margin: 10px 0;
+  align-items: flex-start;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message.ai {
+  justify-content: flex-start;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
+  color: #fff;
+}
+
+.user .message-bubble {
+  background-color: #4CAF50; /* User green */
+}
+
+.ai .message-bubble {
+  background-color: #ddd; /* AI default */
+  color: #000;
+}
+class ChatApplication {
+  constructor() {
+    this.elements = {
+      chatContainer: document.getElementById('chat-container'),
+      questionForm: document.getElementById('question-form'),
+      questionInput: document.getElementById('question-input'),
+    };
+    this._initializeEventListeners();
+  }
+
+  _initializeEventListeners() {
+    this.elements.questionForm.addEventListener('submit', (e) => this._handleSubmit(e));
+  }
+
+  async _handleSubmit(e) {
+    e.preventDefault();
+    const question = this.elements.questionInput.value.trim();
+    if (!question) return;
+    this._addMessage(question, 'user');
+    this.elements.questionInput.value = '';
+
+    // Simulate an API call
+    const response = await this._mockResponse();
+    this._handleResponse(response);
+  }
+
+  _addMessage(text, type, panelist = null) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', type);
+
+    if (panelist) {
+      const avatar = document.createElement('img');
+      avatar.src = panelist.avatar_url;
+      avatar.alt = `${panelist.name}'s avatar`;
+      avatar.className = 'avatar';
+      messageDiv.appendChild(avatar);
+
+      const bubble = document.createElement('div');
+      bubble.classList.add('message-bubble');
+      bubble.style.backgroundColor = panelist.color;
+      bubble.textContent = text;
+      messageDiv.appendChild(bubble);
+
+      if (panelist.audio_url) {
+        const audio = document.createElement('audio');
+        audio.src = panelist.audio_url;
+        audio.controls = true;
+        messageDiv.appendChild(audio);
+      }
+    } else {
+      const bubble = document.createElement('div');
+      bubble.classList.add('message-bubble');
+      bubble.textContent = text;
+      messageDiv.appendChild(bubble);
+    }
+
+    this.elements.chatContainer.appendChild(messageDiv);
+    this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
+  }
+
+  async _mockResponse() {
+    // Mock response for testing
+    return {
+      type: "PANEL_ADVICE",
+      panelists: [
+        {
+          name: "Dr. Alex Johnson",
+          avatar_url: "https://example.com/avatars/dr-alex.png",
+          color: "#4CAF50",
+          response: "Mental health challenges in Black LGBTQ communities require...",
+          audio_url: "https://example.com/audio/dr-alex-response.mp3"
+        },
+        {
+          name: "Ms. Tanya Roberts",
+          avatar_url: "https://example.com/avatars/ms-tanya.png",
+          color: "#FFC107",
+          response: "Community spaces are essential for support and growth...",
+          audio_url: "https://example.com/audio/ms-tanya-response.mp3"
+        },
+        {
+          name: "Prof. Emmanuel Adebola",
+          avatar_url: "https://example.com/avatars/prof-adebola.png",
+          color: "#2196F3",
+          response: "Diaspora issues connect deeply with mental health and community...",
+          audio_url: "https://example.com/audio/prof-adebola-response.mp3"
+        }
+      ]
+    };
+  }
+
+  _handleResponse(response) {
+    if (response.type === "PANEL_ADVICE") {
+      response.panelists.forEach(panelist => {
+        this._addMessage(panelist.response, 'ai', panelist);
+      });
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => new ChatApplication());
