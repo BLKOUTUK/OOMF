@@ -11,7 +11,7 @@ class ChatApplication {
   }
   
 //Connect to API and automation
-const WEBHOOK_URL = "https://hook.make.com/your-webhook-url";
+const WEBHOOK_URL = "https://hook.eu2.make.com/63uhbidi34ap8l6a0u658l9sdmkp5aqb";
 
 async function sendQuestionToWebhook(question) {
   try {
