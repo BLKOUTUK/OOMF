@@ -9,6 +9,38 @@ class ChatApplication {
     // Initialize event listeners
     this.questionForm.addEventListener('submit', (e) => this._handleSubmit(e));
   }
+  
+//Connect to API and automation
+const WEBHOOK_URL = "https://hook.make.com/your-webhook-url";
+
+async function sendQuestionToWebhook(question) {
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, user_id: "12345" })
+    });
+    return await response.json(); // Return the JSON response
+  } catch (error) {
+    console.error("Error sending question to webhook:", error);
+    return { error: "Unable to process your request at this time." };
+  }
+}
+
+async function handleUserQuestion(question) {
+  // Send user question to webhook and display the response
+  const response = await sendQuestionToWebhook(question);
+  if (response.type === "INFORMATION") {
+    addMessage(response.message, "ai"); // Direct response
+  } else if (response.type === "PANEL_ADVICE") {
+    response.panelists.forEach(panelist => {
+      addMessage(panelist.response, "ai", panelist); // Panelist responses
+    });
+  } else if (response.type === "USER_ACTION") {
+    addMessage(response.message, "system");
+    response.options.forEach(option => addMessage(`- ${option}`, "system"));
+  }
+}
 
   // Add a message to the chat
   _addMessage(text, type, panelist = null) {
