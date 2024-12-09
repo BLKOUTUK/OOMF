@@ -82,21 +82,21 @@ class ChatApplication {
       panelists: [
         {
           name: "Dr. Alex Johnson",
-          avatar_url: "https://example.com/avatars/dr-alex.png",
+          avatar_url: "https://blkoutuk.com/wp-content/uploads/2024/12/askoomfpanel1-4.png",
           color: "#4CAF50",
           response: "Mental health challenges require a community-focused approach...",
           audio_url: null // Replace with a hosted audio file URL
         },
         {
           name: "Ms. Tanya Roberts",
-          avatar_url: "https://example.com/avatars/ms-tanya.png",
+          avatar_url: "https://blkoutuk.com/wp-content/uploads/2024/12/9.png",
           color: "#FFC107",
           response: "Support spaces are essential for emotional well-being...",
           audio_url: null // Replace with a hosted audio file URL
         },
         {
           name: "Prof. Emmanuel Adebola",
-          avatar_url: "https://example.com/avatars/prof-adebola.png",
+          avatar_url: "https://blkoutuk.com/wp-content/uploads/2024/12/askoomfpanel1-5.png",
           color: "#2196F3",
           response: "Diaspora connections bridge important cultural gaps...",
           audio_url: null // Replace with a hosted audio file URL
